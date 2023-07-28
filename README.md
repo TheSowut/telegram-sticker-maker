@@ -5,4 +5,4 @@
 ## How to use:
 1. Use the URL from the **About** section to access the application.
 2. Click on **Drop images here** OR **drag and drop** a bunch of images in the box
-3. All your images have been resized & downloaded, ready to be uplodaded to Telegram as stickers.
+3. All your images have been resized & downloaded, ready to be uploaded to Telegram as stickers.
