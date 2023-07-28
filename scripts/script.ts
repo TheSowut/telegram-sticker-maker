@@ -23,7 +23,7 @@ const dropHandler = (event: any) => {
                 const img = new Image();
 
                 reader.onload = (readerEvent: any) => {
-                    img.onload = () => resize(img);
+                    img.onload = () => calculateDimensions(img);
                     img.src = readerEvent.target.result;
                 };
                 reader.readAsDataURL(file);
@@ -75,15 +75,10 @@ const dataURItoBlob = (dataURI: string) => {
  * @param img
  * @returns
  */
-const resize = (img: any) => {
-    const canvas = document.createElement('canvas');
+const calculateDimensions = (img: HTMLImageElement) => {
     const MAX_SIZE = 512;
-
     let width = img.width;
     let height = img.height;
-
-    console.log({ width });
-    console.log({ height });
 
     if (width > height) {
         if (width > MAX_SIZE) {
@@ -97,16 +92,34 @@ const resize = (img: any) => {
         }
     }
 
+    prepareImageForDownload(img, width, height);
+}
+
+/**
+ * TODO
+ * @param img
+ * @param width
+ * @param height
+ */
+const prepareImageForDownload = (img: HTMLImageElement, width: number, height: number) => {
+    const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
     canvas.getContext('2d')!.drawImage(img, 0, 0, width, height);
-    let dataUrl = canvas.toDataURL('image/png');
-    const image = document.querySelector('#output');
-    // @ts-ignore
-    image!.src = dataUrl;
-    console.log(image);
-    console.log(`${canvas.width}:${canvas.height}`);
-    return dataURItoBlob(dataUrl);
+    const dataUrl: string = canvas.toDataURL('image/png');
+    downloadImage(dataUrl);
+}
+
+/**
+ * TODO
+ * @param downloadUrl
+ */
+const downloadImage = (downloadUrl: string) => {
+    const anchor = document.createElement("a");
+    anchor.href = downloadUrl;
+    anchor.download = 'test.png';
+    document.body.appendChild(anchor);
+    anchor.click();
 }
 
 window.addEventListener('load', () => {

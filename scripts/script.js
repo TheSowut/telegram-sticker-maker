@@ -29,7 +29,7 @@ var dropHandler = function (event) {
                 var reader = new FileReader();
                 var img_1 = new Image();
                 reader.onload = function (readerEvent) {
-                    img_1.onload = function () { return resize(img_1); };
+                    img_1.onload = function () { return calculateDimensions(img_1); };
                     img_1.src = readerEvent.target.result;
                 };
                 reader.readAsDataURL(file);
@@ -75,13 +75,10 @@ var dataURItoBlob = function (dataURI) {
  * @param img
  * @returns
  */
-var resize = function (img) {
-    var canvas = document.createElement('canvas');
+var calculateDimensions = function (img) {
     var MAX_SIZE = 512;
     var width = img.width;
     var height = img.height;
-    console.log({ width: width });
-    console.log({ height: height });
     if (width > height) {
         if (width > MAX_SIZE) {
             height *= MAX_SIZE / width;
@@ -94,16 +91,22 @@ var resize = function (img) {
             height = MAX_SIZE;
         }
     }
+    prepareImageForDownload(img, width, height);
+};
+var prepareImageForDownload = function (img, width, height) {
+    var canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
     canvas.getContext('2d').drawImage(img, 0, 0, width, height);
     var dataUrl = canvas.toDataURL('image/png');
-    var image = document.querySelector('#output');
-    // @ts-ignore
-    image.src = dataUrl;
-    console.log(image);
-    console.log(canvas.width + ":" + canvas.height);
-    return dataURItoBlob(dataUrl);
+    downloadImage(dataUrl);
+};
+var downloadImage = function (downloadUrl) {
+    var anchor = document.createElement("a");
+    anchor.href = downloadUrl;
+    anchor.download = 'test.png';
+    document.body.appendChild(anchor);
+    anchor.click();
 };
 window.addEventListener('load', function () {
     var dropBox = document.querySelector('.drop_zone');
