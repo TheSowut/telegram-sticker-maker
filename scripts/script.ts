@@ -1,3 +1,6 @@
+const DROP_IMAGE_EMOJI = '⬇️';
+const SUCCESS_EMOJI = '✔️';
+
 const inputHandler = (event: any) => {
     console.log(event);
 }
@@ -23,7 +26,7 @@ const dropHandler = (event: any) => {
                 const img = new Image();
 
                 reader.onload = (readerEvent: any) => {
-                    img.onload = () => calculateDimensions(img);
+                    img.onload = () => calculateDimensions(img, file.name);
                     img.src = readerEvent.target.result;
                 };
                 reader.readAsDataURL(file);
@@ -75,7 +78,7 @@ const dataURItoBlob = (dataURI: string) => {
  * @param img
  * @returns
  */
-const calculateDimensions = (img: HTMLImageElement) => {
+const calculateDimensions = (img: HTMLImageElement, fileName: string) => {
     const MAX_SIZE = 512;
     let width = img.width;
     let height = img.height;
@@ -85,14 +88,16 @@ const calculateDimensions = (img: HTMLImageElement) => {
             height *= MAX_SIZE / width;
             width = MAX_SIZE;
         }
-    } else {
-        if (height > MAX_SIZE) {
-            width *= MAX_SIZE / height;
-            height = MAX_SIZE;
-        }
+
+        return prepareImageForDownload(img, width, height, fileName);
     }
 
-    prepareImageForDownload(img, width, height);
+    if (height > MAX_SIZE) {
+        width *= MAX_SIZE / height;
+        height = MAX_SIZE;
+    }
+
+    prepareImageForDownload(img, width, height, fileName);
 }
 
 /**
@@ -101,23 +106,23 @@ const calculateDimensions = (img: HTMLImageElement) => {
  * @param width
  * @param height
  */
-const prepareImageForDownload = (img: HTMLImageElement, width: number, height: number) => {
+const prepareImageForDownload = (img: HTMLImageElement, width: number, height: number, fileName: string) => {
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
     canvas.getContext('2d')!.drawImage(img, 0, 0, width, height);
     const dataUrl: string = canvas.toDataURL('image/png');
-    downloadImage(dataUrl);
+    downloadImage(dataUrl, fileName);
 }
 
 /**
  * TODO
  * @param downloadUrl
  */
-const downloadImage = (downloadUrl: string) => {
+const downloadImage = (downloadUrl: string, fileName: string) => {
     const anchor = document.createElement("a");
     anchor.href = downloadUrl;
-    anchor.download = 'test.png';
+    anchor.download = fileName;
     document.body.appendChild(anchor);
     anchor.click();
 }
@@ -126,17 +131,7 @@ window.addEventListener('load', () => {
     const dropBox: HTMLElement = document.querySelector('.drop_zone')!;
     const emoji = document.querySelector('#emoji');
 
-    dropBox.addEventListener('dragover', () => {
-        emoji!.innerHTML = '✔️';
-        dropBox.classList.add('on-dragover')
-    });
-
-    dropBox.addEventListener('dragleave', () => {
-        emoji!.innerHTML = '⬇️';
-        dropBox.classList.remove('on-dragover')
-    });
-    dropBox.addEventListener('drop', () => {
-        emoji!.innerHTML = '⬇️';
-        dropBox.classList.remove('on-dragover')
-    });
+    dropBox.addEventListener('dragover', () => emoji!.innerHTML = SUCCESS_EMOJI);
+    dropBox.addEventListener('dragleave', () => emoji!.innerHTML = DROP_IMAGE_EMOJI);
+    dropBox.addEventListener('drop', () => emoji!.innerHTML = DROP_IMAGE_EMOJI);
 });

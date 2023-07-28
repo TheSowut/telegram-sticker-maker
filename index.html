@@ -18,10 +18,8 @@
             <input type="file" id="imgupload" style="display: none" oninput="inputHandler(event)">
             <div class="drop_zone" ondrop=" dropHandler(event);" onclick="test(event)"
                 ondragover="dragOverHandler(event);">
-                <div class="drop_zone-text">
-                    <p id="emoji">⬇️</p>
-                    <label class="choose-photo" for="imgupload">Drop images here</label>
-                </div>
+                <label class="choose-photo" for="imgupload">Drop images here</label>
+                <p id="emoji">⬇️</p>
             </div>
             <img id="output" width="200" />
         </div>

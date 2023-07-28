@@ -7,6 +7,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
+var DROP_IMAGE_EMOJI = '⬇️';
+var SUCCESS_EMOJI = '✔️';
 var inputHandler = function (event) {
     console.log(event);
 };
@@ -22,17 +24,17 @@ var dropHandler = function (event) {
         // Use DataTransferItemList to access
         items.map(function (item, i) {
             if (item.kind === 'file') {
-                var file = item.getAsFile();
-                if (!isFileImage(file))
+                var file_1 = item.getAsFile();
+                if (!isFileImage(file_1))
                     return;
-                console.log("... file[" + i + "] = " + file.name);
+                console.log("... file[" + i + "] = " + file_1.name);
                 var reader = new FileReader();
                 var img_1 = new Image();
                 reader.onload = function (readerEvent) {
-                    img_1.onload = function () { return calculateDimensions(img_1); };
+                    img_1.onload = function () { return calculateDimensions(img_1, file_1.name); };
                     img_1.src = readerEvent.target.result;
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(file_1);
             }
         });
         return;
@@ -75,7 +77,7 @@ var dataURItoBlob = function (dataURI) {
  * @param img
  * @returns
  */
-var calculateDimensions = function (img) {
+var calculateDimensions = function (img, fileName) {
     var MAX_SIZE = 512;
     var width = img.width;
     var height = img.height;
@@ -84,43 +86,43 @@ var calculateDimensions = function (img) {
             height *= MAX_SIZE / width;
             width = MAX_SIZE;
         }
+        return prepareImageForDownload(img, width, height, fileName);
     }
-    else {
-        if (height > MAX_SIZE) {
-            width *= MAX_SIZE / height;
-            height = MAX_SIZE;
-        }
+    if (height > MAX_SIZE) {
+        width *= MAX_SIZE / height;
+        height = MAX_SIZE;
     }
-    prepareImageForDownload(img, width, height);
+    prepareImageForDownload(img, width, height, fileName);
 };
-var prepareImageForDownload = function (img, width, height) {
+/**
+ * TODO
+ * @param img
+ * @param width
+ * @param height
+ */
+var prepareImageForDownload = function (img, width, height, fileName) {
     var canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
     canvas.getContext('2d').drawImage(img, 0, 0, width, height);
     var dataUrl = canvas.toDataURL('image/png');
-    downloadImage(dataUrl);
+    downloadImage(dataUrl, fileName);
 };
-var downloadImage = function (downloadUrl) {
+/**
+ * TODO
+ * @param downloadUrl
+ */
+var downloadImage = function (downloadUrl, fileName) {
     var anchor = document.createElement("a");
     anchor.href = downloadUrl;
-    anchor.download = 'test.png';
+    anchor.download = fileName;
     document.body.appendChild(anchor);
     anchor.click();
 };
 window.addEventListener('load', function () {
     var dropBox = document.querySelector('.drop_zone');
     var emoji = document.querySelector('#emoji');
-    dropBox.addEventListener('dragover', function () {
-        emoji.innerHTML = '✔️';
-        dropBox.classList.add('on-dragover');
-    });
-    dropBox.addEventListener('dragleave', function () {
-        emoji.innerHTML = '⬇️';
-        dropBox.classList.remove('on-dragover');
-    });
-    dropBox.addEventListener('drop', function () {
-        emoji.innerHTML = '⬇️';
-        dropBox.classList.remove('on-dragover');
-    });
+    dropBox.addEventListener('dragover', function () { return emoji.innerHTML = SUCCESS_EMOJI; });
+    dropBox.addEventListener('dragleave', function () { return emoji.innerHTML = DROP_IMAGE_EMOJI; });
+    dropBox.addEventListener('drop', function () { return emoji.innerHTML = DROP_IMAGE_EMOJI; });
 });
