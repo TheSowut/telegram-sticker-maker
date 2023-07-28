@@ -10,7 +10,9 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 var DROP_IMAGE_EMOJI = '⬇️';
 var SUCCESS_EMOJI = '✔️';
 var inputHandler = function (event) {
-    console.log(event);
+    event.preventDefault();
+    var files = __spreadArray([], event.srcElement.files, true);
+    files.map(function (file) { return prepareReader(file); });
 };
 /**
  * Handles the drop event.
@@ -20,29 +22,26 @@ var inputHandler = function (event) {
 var dropHandler = function (event) {
     event.preventDefault();
     var items = __spreadArray([], event.dataTransfer.items, true);
-    if (items) {
-        // Use DataTransferItemList to access
-        items.map(function (item, i) {
-            if (item.kind === 'file') {
-                var file_1 = item.getAsFile();
-                if (!isFileImage(file_1))
-                    return;
-                console.log("... file[" + i + "] = " + file_1.name);
-                var reader = new FileReader();
-                var img_1 = new Image();
-                reader.onload = function (readerEvent) {
-                    img_1.onload = function () { return calculateDimensions(img_1, file_1.name); };
-                    img_1.src = readerEvent.target.result;
-                };
-                reader.readAsDataURL(file_1);
-            }
-        });
-        return;
-    }
-    // Use DataTransfer interface to access
-    __spreadArray([], event.dataTransfer.files, true).map(function (file, i) {
-        console.log("... file[" + i + "].name = " + file.name);
+    items === null || items === void 0 ? void 0 : items.map(function (item) {
+        if (item.kind === 'file')
+            prepareReader(item.getAsFile());
     });
+};
+/**
+ * TODO
+ * @param file
+ * @returns
+ */
+var prepareReader = function (file) {
+    if (!isFileImage(file))
+        return;
+    var reader = new FileReader();
+    var img = new Image();
+    reader.onload = function (readerEvent) {
+        img.onload = function () { return calculateDimensions(img, file.name); };
+        img.src = readerEvent.target.result;
+    };
+    reader.readAsDataURL(file);
 };
 /**
  * Prevents the default drag over event.

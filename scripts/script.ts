@@ -2,7 +2,10 @@ const DROP_IMAGE_EMOJI = '⬇️';
 const SUCCESS_EMOJI = '✔️';
 
 const inputHandler = (event: any) => {
-    console.log(event);
+    event.preventDefault();
+
+    const files = [...event.srcElement.files];
+    files.map((file: File) => prepareReader(file));
 }
 
 /**
@@ -14,34 +17,28 @@ const dropHandler = (event: any) => {
     event.preventDefault();
 
     const items = [...event.dataTransfer.items];
-    if (items) {
-        // Use DataTransferItemList to access
-        items.map((item: any, i: number) => {
-            if (item.kind === 'file') {
-                const file = item.getAsFile();
-                if (!isFileImage(file)) return;
-                console.log(`... file[${i}] = ${file.name}`);
-
-                const reader = new FileReader();
-                const img = new Image();
-
-                reader.onload = (readerEvent: any) => {
-                    img.onload = () => calculateDimensions(img, file.name);
-                    img.src = readerEvent.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-
-        });
-        return;
-    }
-
-    // Use DataTransfer interface to access
-    [...event.dataTransfer.files].map((file: any, i: number) => {
-        console.log(`... file[${i}].name = ${file.name}`);
+    items?.map((item) => {
+        if (item.kind === 'file') prepareReader(item.getAsFile());
     });
-
 };
+
+/**
+ * TODO
+ * @param file
+ * @returns
+ */
+const prepareReader = (file: File) => {
+    if (!isFileImage(file)) return;
+
+    const reader = new FileReader();
+    const img = new Image();
+
+    reader.onload = (readerEvent: any) => {
+        img.onload = () => calculateDimensions(img, file.name);
+        img.src = readerEvent!.target!.result;
+    };
+    reader.readAsDataURL(file);
+}
 
 /**
  * Prevents the default drag over event.
@@ -55,7 +52,7 @@ const dragOverHandler = (event: any) => event.preventDefault();
  * @param file - the file checked
  * @returns boolean
  */
-const isFileImage = (file: any) => file.type.match(/image.*/);
+const isFileImage = (file: File) => file.type.match(/image.*/);
 
 /**
  * TODO
