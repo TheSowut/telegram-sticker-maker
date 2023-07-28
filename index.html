@@ -6,15 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>telegram-sticker-maker</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <script src="./scripts/script.js"></script>
+    <main>
+        <div class="container">
+            <input type="file" id="imgupload" style="display: none" oninput="inputHandler(event)">
+            <div class="drop_zone" ondrop=" dropHandler(event);" onclick="test(event)"
+                ondragover="dragOverHandler(event);">
+                <div class="drop_zone-text">
+                    <p id="emoji">⬇️</p>
+                    <label class="choose-photo" for="imgupload">Drop images here</label>
+                </div>
+            </div>
+            <img id="output" width="200" />
+        </div>
+    </main>
 
-    <div class="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-        <!-- <input id="file" type="file" oninput="inputHandler(event)"> -->
-    </div>
-    <img id="output" width="200" />
 </body>
 
 </html>

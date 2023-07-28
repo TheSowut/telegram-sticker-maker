@@ -1,6 +1,6 @@
-// const inputHandler = (event: any) => {
-//     console.log(event);
-// }
+const inputHandler = (event: any) => {
+    console.log(event);
+}
 
 /**
  * Handles the drop event.
@@ -109,10 +109,21 @@ const resize = (img: any) => {
     return dataURItoBlob(dataUrl);
 }
 
-window.addEventListener('load', async () => {
-    const el: HTMLElement = document.querySelector('.drop_zone')!;
+window.addEventListener('load', () => {
+    const dropBox: HTMLElement = document.querySelector('.drop_zone')!;
+    const emoji = document.querySelector('#emoji');
 
-    el.addEventListener('dragover', () => el.classList.add('on-dragover'));
-    el.addEventListener('dragleave', () => el.classList.remove('on-dragover'));
-    el.addEventListener('drop', () =>  el.classList.remove('on-dragover'));
+    dropBox.addEventListener('dragover', () => {
+        emoji!.innerHTML = '✔️';
+        dropBox.classList.add('on-dragover')
+    });
+
+    dropBox.addEventListener('dragleave', () => {
+        emoji!.innerHTML = '⬇️';
+        dropBox.classList.remove('on-dragover')
+    });
+    dropBox.addEventListener('drop', () => {
+        emoji!.innerHTML = '⬇️';
+        dropBox.classList.remove('on-dragover')
+    });
 });
