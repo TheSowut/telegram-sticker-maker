@@ -108,3 +108,11 @@ const resize = (img: any) => {
     console.log(`${canvas.width}:${canvas.height}`);
     return dataURItoBlob(dataUrl);
 }
+
+window.addEventListener('load', async () => {
+    const el: HTMLElement = document.querySelector('.drop_zone')!;
+
+    el.addEventListener('dragover', () => el.classList.add('on-dragover'));
+    el.addEventListener('dragleave', () => el.classList.remove('on-dragover'));
+    el.addEventListener('drop', () =>  el.classList.remove('on-dragover'));
+});

@@ -3,3 +3,7 @@
     width: 200px;
     height: 100px;
 }
+
+.on-dragover {
+    background-color: red;
+}
