@@ -1,6 +1,10 @@
 const DROP_IMAGE_EMOJI = '⬇️';
 const SUCCESS_EMOJI = '✔️';
 
+/**
+ * Handles the input event
+ * @param event
+ */
 const inputHandler = (event: any) => {
     event.preventDefault();
 
@@ -9,9 +13,8 @@ const inputHandler = (event: any) => {
 }
 
 /**
- * Handles the drop event.
+ * Handles the drop event
  * @param event
- * @returns
  */
 const dropHandler = (event: any) => {
     event.preventDefault();
@@ -23,7 +26,7 @@ const dropHandler = (event: any) => {
 };
 
 /**
- * TODO
+ * Prepare a FileReader to process the files.
  * @param file
  * @returns
  */
@@ -55,7 +58,7 @@ const dragOverHandler = (event: any) => event.preventDefault();
 const isFileImage = (file: File) => file.type.match(/image.*/);
 
 /**
- * TODO
+ * Transform URI to Blob.
  * @param dataURI
  * @returns
  */
@@ -71,7 +74,7 @@ const dataURItoBlob = (dataURI: string) => {
 };
 
 /**
- * TODO
+ * Calculate the new dimension of the image.
  * @param img
  * @returns
  */
@@ -86,7 +89,7 @@ const calculateDimensions = (img: HTMLImageElement, fileName: string) => {
             width = MAX_SIZE;
         }
 
-        return prepareImageForDownload(img, width, height, fileName);
+        return resizeImage(img, width, height, fileName);
     }
 
     if (height > MAX_SIZE) {
@@ -94,16 +97,16 @@ const calculateDimensions = (img: HTMLImageElement, fileName: string) => {
         height = MAX_SIZE;
     }
 
-    prepareImageForDownload(img, width, height, fileName);
+    resizeImage(img, width, height, fileName);
 }
 
 /**
- * TODO
+ * Create a canvas and resize the image.
  * @param img
  * @param width
  * @param height
  */
-const prepareImageForDownload = (img: HTMLImageElement, width: number, height: number, fileName: string) => {
+const resizeImage = (img: HTMLImageElement, width: number, height: number, fileName: string) => {
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
@@ -113,7 +116,7 @@ const prepareImageForDownload = (img: HTMLImageElement, width: number, height: n
 }
 
 /**
- * TODO
+ * Create a download URL and save the image locally.
  * @param downloadUrl
  */
 const downloadImage = (downloadUrl: string, fileName: string) => {
@@ -124,6 +127,10 @@ const downloadImage = (downloadUrl: string, fileName: string) => {
     anchor.click();
 }
 
+/**
+ * When the browser has loaded, add event listeners
+ * to the drop box so we can attach animations to user actions.
+ */
 window.addEventListener('load', () => {
     const dropBox: HTMLElement = document.querySelector('.drop_zone')!;
     const emoji = document.querySelector('#emoji');
