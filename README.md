@@ -8,4 +8,5 @@
 3. All your images have been resized & downloaded, ready to be uploaded to Telegram as stickers.
 
 ## To be added:
-1. Notification on image download
+1. Responsive design
+2. Notification on image download
