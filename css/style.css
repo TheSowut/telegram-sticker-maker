@@ -54,3 +54,21 @@ main {
 .on-dragover {
     /* background-color: #a7a7a7; */
 }
+
+@media only screen and (max-width: 800px) {
+
+    .drop_zone {
+        width: 65%;
+        height: 50%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .choose-photo {
+        font-size: 1.5em;
+    }
+
+    #emoji {
+        padding-top: 5%;
+    }
+}
