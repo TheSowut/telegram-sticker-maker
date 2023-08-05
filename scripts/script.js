@@ -9,15 +9,18 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 var DROP_IMAGE_EMOJI = '⬇️';
 var SUCCESS_EMOJI = '✔️';
+/**
+ * Handles the input event
+ * @param event
+ */
 var inputHandler = function (event) {
     event.preventDefault();
     var files = __spreadArray([], event.srcElement.files, true);
     files.map(function (file) { return prepareReader(file); });
 };
 /**
- * Handles the drop event.
+ * Handles the drop event
  * @param event
- * @returns
  */
 var dropHandler = function (event) {
     event.preventDefault();
@@ -28,7 +31,7 @@ var dropHandler = function (event) {
     });
 };
 /**
- * TODO
+ * Prepare a FileReader to process the files.
  * @param file
  * @returns
  */
@@ -56,7 +59,7 @@ var dragOverHandler = function (event) { return event.preventDefault(); };
  */
 var isFileImage = function (file) { return file.type.match(/image.*/); };
 /**
- * TODO
+ * Transform URI to Blob.
  * @param dataURI
  * @returns
  */
@@ -72,7 +75,7 @@ var dataURItoBlob = function (dataURI) {
     return new Blob([ia], { type: mime });
 };
 /**
- * TODO
+ * Calculate the new dimension of the image.
  * @param img
  * @returns
  */
@@ -85,21 +88,21 @@ var calculateDimensions = function (img, fileName) {
             height *= MAX_SIZE / width;
             width = MAX_SIZE;
         }
-        return prepareImageForDownload(img, width, height, fileName);
+        return resizeImage(img, width, height, fileName);
     }
     if (height > MAX_SIZE) {
         width *= MAX_SIZE / height;
         height = MAX_SIZE;
     }
-    prepareImageForDownload(img, width, height, fileName);
+    resizeImage(img, width, height, fileName);
 };
 /**
- * TODO
+ * Create a canvas and resize the image.
  * @param img
  * @param width
  * @param height
  */
-var prepareImageForDownload = function (img, width, height, fileName) {
+var resizeImage = function (img, width, height, fileName) {
     var canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
@@ -108,7 +111,7 @@ var prepareImageForDownload = function (img, width, height, fileName) {
     downloadImage(dataUrl, fileName);
 };
 /**
- * TODO
+ * Create a download URL and save the image locally.
  * @param downloadUrl
  */
 var downloadImage = function (downloadUrl, fileName) {
@@ -118,10 +121,32 @@ var downloadImage = function (downloadUrl, fileName) {
     document.body.appendChild(anchor);
     anchor.click();
 };
+/**
+ * When the browser has loaded, add event listeners
+ * to the drop box so we can attach animations to user actions.
+ */
 window.addEventListener('load', function () {
     var dropBox = document.querySelector('.drop_zone');
     var emoji = document.querySelector('#emoji');
+    var notification = document.querySelector('.notification');
     dropBox.addEventListener('dragover', function () { return emoji.innerHTML = SUCCESS_EMOJI; });
     dropBox.addEventListener('dragleave', function () { return emoji.innerHTML = DROP_IMAGE_EMOJI; });
     dropBox.addEventListener('drop', function () { return emoji.innerHTML = DROP_IMAGE_EMOJI; });
+    notification === null || notification === void 0 ? void 0 : notification.addEventListener('mouseover', function (e) {
+        var element = e.target ? e.target : e.srcElement;
+        // @ts-ignore;
+        element.remove();
+    });
+    dropBox.addEventListener('mouseover', function () {
+        var newElement = document.createElement('div');
+        newElement.classList.add('notification');
+        newElement.innerHTML = "\n            <p>Your photo has been resized.</p>\n        ";
+        // Temporal testing code.
+        newElement.addEventListener('mouseover', function (e) {
+            var element = e.target ? e.target : e.srcElement;
+            // @ts-ignore;
+            element.remove();
+        });
+        document.body.appendChild(newElement);
+    });
 });

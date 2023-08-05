@@ -55,6 +55,25 @@ main {
     /* background-color: #a7a7a7; */
 }
 
+.notification {
+    position: absolute;
+    top:0;
+    right: 0;
+
+    background: green;
+    width: 20%;
+    /* height: 10%; */
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-size: 1.6em;
+    color: #fff;
+
+    padding: 0.25em;
+    border-radius: 0px 0px 0px 10px;
+}
+
 @media only screen and (max-width: 800px) {
 
     .drop_zone {

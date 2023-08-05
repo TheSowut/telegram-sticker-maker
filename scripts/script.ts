@@ -134,8 +134,32 @@ const downloadImage = (downloadUrl: string, fileName: string) => {
 window.addEventListener('load', () => {
     const dropBox: HTMLElement = document.querySelector('.drop_zone')!;
     const emoji = document.querySelector('#emoji');
+    const notification = document.querySelector('.notification');
 
     dropBox.addEventListener('dragover', () => emoji!.innerHTML = SUCCESS_EMOJI);
     dropBox.addEventListener('dragleave', () => emoji!.innerHTML = DROP_IMAGE_EMOJI);
     dropBox.addEventListener('drop', () => emoji!.innerHTML = DROP_IMAGE_EMOJI);
+    notification?.addEventListener('mouseover', (e) => {
+        const element = e.target ? e.target! : e.srcElement!;
+        // @ts-ignore;
+        element.remove();
+    });
+
+    dropBox.addEventListener('mouseover', () => {
+        let newElement = document.createElement('div');
+        newElement.classList.add('notification');
+        newElement.innerHTML = `
+            <p>Your photo has been resized.</p>
+        `;
+
+        // Temporal testing code.
+        newElement.addEventListener('mouseover', (e) => {
+            const element = e.target ? e.target! : e.srcElement!;
+            // @ts-ignore;
+            element.remove();
+        });
+
+        document.body.appendChild(newElement);
+    });
+
 });
