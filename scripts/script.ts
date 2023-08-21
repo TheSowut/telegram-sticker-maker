@@ -2,8 +2,6 @@ const DROP_IMAGE_EMOJI = '⬇️';
 const SUCCESS_EMOJI = '✔️';
 const MAX_NOTIFICATION_COUNT = 5;
 const NOTIFICATION_TIMEOUT = 3000;
-const NOTIFICATION_GAP_PX = 40;
-let notificationTopPosition: number = 0;
 
 /**
  * Handles the input event
@@ -138,16 +136,11 @@ const downloadImage = (downloadUrl: string, fileName: string) => {
 window.addEventListener('load', () => {
     const dropBox: HTMLElement = document.querySelector('.drop_zone')!;
     const emoji = document.querySelector('#emoji');
-    const notification = document.querySelector('.notification');
+    const notificationContainer: Element = document.querySelector('.notification-container')!;
 
     dropBox.addEventListener('dragover', () => emoji!.innerHTML = SUCCESS_EMOJI);
     dropBox.addEventListener('dragleave', () => emoji!.innerHTML = DROP_IMAGE_EMOJI);
     dropBox.addEventListener('drop', () => emoji!.innerHTML = DROP_IMAGE_EMOJI);
-    notification?.addEventListener('mouseover', (e) => {
-        const element = e.target ? e.target! : e.srcElement!;
-        // @ts-ignore;
-        element.remove();
-    });
 
     dropBox.addEventListener('mouseover', () => {
         const notifications = document.querySelectorAll('.notification');
@@ -155,17 +148,12 @@ window.addEventListener('load', () => {
 
         let newElement = document.createElement('div');
         newElement.classList.add('notification');
-        newElement.style.top = `${notificationTopPosition}px`;
-        notificationTopPosition += NOTIFICATION_GAP_PX;
         newElement.innerHTML = `
                 <p>Photo resized ${SUCCESS_EMOJI}</p>
         `;
-        document.body.appendChild(newElement);
+        notificationContainer.appendChild(newElement);
 
         // Remove the notification after 3 seconds.
-        setTimeout(() => {
-            notificationTopPosition -= NOTIFICATION_GAP_PX;
-            document.body.removeChild(newElement);
-        }, NOTIFICATION_TIMEOUT)
+        setTimeout(() => notificationContainer.removeChild(newElement), NOTIFICATION_TIMEOUT);
     });
 });

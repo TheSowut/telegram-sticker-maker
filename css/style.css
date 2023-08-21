@@ -51,14 +51,17 @@ main {
     color: #2AABEE;
 }
 
-.notification {
+.notification-container {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 0px;
+    right: 0px;
 
+    display: flex;
+    flex-direction: column;
+}
+
+.notification {
     background: green;
-    width: 10%;
-    /* height: 10%; */
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -87,7 +90,6 @@ main {
     }
 
     .notification {
-        width: 30%;
-        font-size: 0.8em;
+        font-size: 1em;
     }
 }

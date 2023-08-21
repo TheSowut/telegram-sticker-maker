@@ -11,8 +11,6 @@ var DROP_IMAGE_EMOJI = '⬇️';
 var SUCCESS_EMOJI = '✔️';
 var MAX_NOTIFICATION_COUNT = 5;
 var NOTIFICATION_TIMEOUT = 3000;
-var NOTIFICATION_GAP_PX = 40;
-var notificationTopPosition = 0;
 /**
  * Handles the input event
  * @param event
@@ -132,29 +130,19 @@ var downloadImage = function (downloadUrl, fileName) {
 window.addEventListener('load', function () {
     var dropBox = document.querySelector('.drop_zone');
     var emoji = document.querySelector('#emoji');
-    var notification = document.querySelector('.notification');
+    var notificationContainer = document.querySelector('.notification-container');
     dropBox.addEventListener('dragover', function () { return emoji.innerHTML = SUCCESS_EMOJI; });
     dropBox.addEventListener('dragleave', function () { return emoji.innerHTML = DROP_IMAGE_EMOJI; });
     dropBox.addEventListener('drop', function () { return emoji.innerHTML = DROP_IMAGE_EMOJI; });
-    notification === null || notification === void 0 ? void 0 : notification.addEventListener('mouseover', function (e) {
-        var element = e.target ? e.target : e.srcElement;
-        // @ts-ignore;
-        element.remove();
-    });
     dropBox.addEventListener('mouseover', function () {
         var notifications = document.querySelectorAll('.notification');
         if (notifications.length >= MAX_NOTIFICATION_COUNT)
             return;
         var newElement = document.createElement('div');
         newElement.classList.add('notification');
-        newElement.style.top = "".concat(notificationTopPosition, "px");
-        notificationTopPosition += NOTIFICATION_GAP_PX;
         newElement.innerHTML = "\n                <p>Photo resized ".concat(SUCCESS_EMOJI, "</p>\n        ");
-        document.body.appendChild(newElement);
+        notificationContainer.appendChild(newElement);
         // Remove the notification after 3 seconds.
-        setTimeout(function () {
-            notificationTopPosition -= NOTIFICATION_GAP_PX;
-            document.body.removeChild(newElement);
-        }, NOTIFICATION_TIMEOUT);
+        setTimeout(function () { return notificationContainer.removeChild(newElement); }, NOTIFICATION_TIMEOUT);
     });
 });
