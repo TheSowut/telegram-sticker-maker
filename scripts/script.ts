@@ -1,6 +1,7 @@
 const DROP_IMAGE_EMOJI = '⬇️';
 const SUCCESS_EMOJI = '✔️';
 const MAX_NOTIFICATION_COUNT = 5;
+const NOTIFICATION_TIMEOUT = 3000;
 let notificationTopPosition: number = 0;
 
 /**
@@ -149,15 +150,7 @@ window.addEventListener('load', () => {
 
     dropBox.addEventListener('mouseover', () => {
         const notifications = document.querySelectorAll('.notification');
-        if (notifications.length >= MAX_NOTIFICATION_COUNT) {
-            for (const x of Array.from(notifications)) {
-                console.log(x);
-                document.body.removeChild(x);
-            }
-
-            notificationTopPosition = 0;
-            return;
-        }
+        if (notifications.length >= MAX_NOTIFICATION_COUNT) return;
 
         let newElement = document.createElement('div');
         newElement.classList.add('notification');
@@ -166,19 +159,12 @@ window.addEventListener('load', () => {
         newElement.innerHTML = `
             <p>Your photo has been resized.</p>
         `;
-
-        // Temporal testing code.
-        newElement.addEventListener('mouseover', (e) => {
-            const element = e.target ? e.target! : e.srcElement!;
-            // @ts-ignore;
-            element.remove();
-
-            if (!notifications.length) {
-                notificationTopPosition = 0;
-                return;
-            }
-        });
-
         document.body.appendChild(newElement);
+
+        // Remove the notification after 3 seconds.
+        setTimeout(() => {
+            notificationTopPosition -= 40;
+            document.body.removeChild(newElement);
+        }, NOTIFICATION_TIMEOUT)
     });
 });
