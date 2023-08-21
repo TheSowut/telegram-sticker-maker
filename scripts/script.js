@@ -122,6 +122,25 @@ var downloadImage = function (downloadUrl, fileName) {
     anchor.download = fileName;
     document.body.appendChild(anchor);
     anchor.click();
+    displayImageResizedNotification();
+};
+/**
+ * Display a notification when the image has been successfuly resized & downloaded.
+ * The notification is automatically removed after a timeout period.
+ *
+ * @returns
+ */
+var displayImageResizedNotification = function () {
+    var notifications = document.querySelectorAll('.notification');
+    var notificationContainer = document.querySelector('.notification-container');
+    if (notifications.length >= MAX_NOTIFICATION_COUNT)
+        return;
+    var newElement = document.createElement('div');
+    newElement.classList.add('notification');
+    newElement.innerHTML = "<p>Image resized ".concat(SUCCESS_EMOJI, "</p>");
+    notificationContainer.appendChild(newElement);
+    // Remove the notification after 3 seconds.
+    setTimeout(function () { return notificationContainer.removeChild(newElement); }, NOTIFICATION_TIMEOUT);
 };
 /**
  * When the browser has loaded, add event listeners
@@ -130,19 +149,7 @@ var downloadImage = function (downloadUrl, fileName) {
 window.addEventListener('load', function () {
     var dropBox = document.querySelector('.drop_zone');
     var emoji = document.querySelector('#emoji');
-    var notificationContainer = document.querySelector('.notification-container');
     dropBox.addEventListener('dragover', function () { return emoji.innerHTML = SUCCESS_EMOJI; });
     dropBox.addEventListener('dragleave', function () { return emoji.innerHTML = DROP_IMAGE_EMOJI; });
     dropBox.addEventListener('drop', function () { return emoji.innerHTML = DROP_IMAGE_EMOJI; });
-    dropBox.addEventListener('mouseover', function () {
-        var notifications = document.querySelectorAll('.notification');
-        if (notifications.length >= MAX_NOTIFICATION_COUNT)
-            return;
-        var newElement = document.createElement('div');
-        newElement.classList.add('notification');
-        newElement.innerHTML = "\n                <p>Photo resized ".concat(SUCCESS_EMOJI, "</p>\n        ");
-        notificationContainer.appendChild(newElement);
-        // Remove the notification after 3 seconds.
-        setTimeout(function () { return notificationContainer.removeChild(newElement); }, NOTIFICATION_TIMEOUT);
-    });
 });

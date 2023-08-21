@@ -127,6 +127,28 @@ const downloadImage = (downloadUrl: string, fileName: string) => {
     anchor.download = fileName;
     document.body.appendChild(anchor);
     anchor.click();
+    displayImageResizedNotification();
+}
+
+/**
+ * Display a notification when the image has been successfuly resized & downloaded.
+ * The notification is automatically removed after a timeout period.
+ *
+ * @returns
+ */
+const displayImageResizedNotification = () => {
+    const notifications = document.querySelectorAll('.notification');
+    const notificationContainer: Element = document.querySelector('.notification-container')!;
+
+    if (notifications.length >= MAX_NOTIFICATION_COUNT) return;
+
+    let newElement = document.createElement('div');
+    newElement.classList.add('notification');
+    newElement.innerHTML = `<p>Image resized ${SUCCESS_EMOJI}</p>`;
+    notificationContainer.appendChild(newElement);
+
+    // Remove the notification after 3 seconds.
+    setTimeout(() => notificationContainer.removeChild(newElement), NOTIFICATION_TIMEOUT);
 }
 
 /**
@@ -136,24 +158,8 @@ const downloadImage = (downloadUrl: string, fileName: string) => {
 window.addEventListener('load', () => {
     const dropBox: HTMLElement = document.querySelector('.drop_zone')!;
     const emoji = document.querySelector('#emoji');
-    const notificationContainer: Element = document.querySelector('.notification-container')!;
 
     dropBox.addEventListener('dragover', () => emoji!.innerHTML = SUCCESS_EMOJI);
     dropBox.addEventListener('dragleave', () => emoji!.innerHTML = DROP_IMAGE_EMOJI);
     dropBox.addEventListener('drop', () => emoji!.innerHTML = DROP_IMAGE_EMOJI);
-
-    dropBox.addEventListener('mouseover', () => {
-        const notifications = document.querySelectorAll('.notification');
-        if (notifications.length >= MAX_NOTIFICATION_COUNT) return;
-
-        let newElement = document.createElement('div');
-        newElement.classList.add('notification');
-        newElement.innerHTML = `
-                <p>Photo resized ${SUCCESS_EMOJI}</p>
-        `;
-        notificationContainer.appendChild(newElement);
-
-        // Remove the notification after 3 seconds.
-        setTimeout(() => notificationContainer.removeChild(newElement), NOTIFICATION_TIMEOUT);
-    });
 });
