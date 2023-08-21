@@ -9,6 +9,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 var DROP_IMAGE_EMOJI = '⬇️';
 var SUCCESS_EMOJI = '✔️';
+var MAX_NOTIFICATION_COUNT = 5;
+var notificationTopPosition = 0;
 /**
  * Handles the input event
  * @param event
@@ -138,14 +140,30 @@ window.addEventListener('load', function () {
         element.remove();
     });
     dropBox.addEventListener('mouseover', function () {
+        var notifications = document.querySelectorAll('.notification');
+        if (notifications.length >= MAX_NOTIFICATION_COUNT) {
+            for (var _i = 0, _a = Array.from(notifications); _i < _a.length; _i++) {
+                var x = _a[_i];
+                console.log(x);
+                document.body.removeChild(x);
+            }
+            notificationTopPosition = 0;
+            return;
+        }
         var newElement = document.createElement('div');
         newElement.classList.add('notification');
+        newElement.style.top = "".concat(notificationTopPosition, "px");
+        notificationTopPosition += 40;
         newElement.innerHTML = "\n            <p>Your photo has been resized.</p>\n        ";
         // Temporal testing code.
         newElement.addEventListener('mouseover', function (e) {
             var element = e.target ? e.target : e.srcElement;
             // @ts-ignore;
             element.remove();
+            if (!notifications.length) {
+                notificationTopPosition = 0;
+                return;
+            }
         });
         document.body.appendChild(newElement);
     });
