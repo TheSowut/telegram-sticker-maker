@@ -51,18 +51,17 @@ main {
     color: #2AABEE;
 }
 
-.on-dragover {
-    /* background-color: #a7a7a7; */
+.notification-container {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .notification {
-    position: absolute;
-    top:0;
-    right: 0;
-
     background: green;
-    width: 20%;
-    /* height: 10%; */
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -71,10 +70,13 @@ main {
     color: #fff;
 
     padding: 0.25em;
-    border-radius: 0px 0px 0px 10px;
 }
 
 @media only screen and (max-width: 800px) {
+
+    #emoji {
+        padding-top: 5%;
+    }
 
     .drop_zone {
         width: 65%;
@@ -87,7 +89,7 @@ main {
         font-size: 1.5em;
     }
 
-    #emoji {
-        padding-top: 5%;
+    .notification {
+        font-size: 1em;
     }
 }

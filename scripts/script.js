@@ -9,6 +9,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 var DROP_IMAGE_EMOJI = '⬇️';
 var SUCCESS_EMOJI = '✔️';
+var MAX_NOTIFICATION_COUNT = 5;
+var NOTIFICATION_TIMEOUT = 3000;
 /**
  * Handles the input event
  * @param event
@@ -120,6 +122,25 @@ var downloadImage = function (downloadUrl, fileName) {
     anchor.download = fileName;
     document.body.appendChild(anchor);
     anchor.click();
+    displayImageResizedNotification();
+};
+/**
+ * Display a notification when the image has been successfuly resized & downloaded.
+ * The notification is automatically removed after a timeout period.
+ *
+ * @returns
+ */
+var displayImageResizedNotification = function () {
+    var notifications = document.querySelectorAll('.notification');
+    var notificationContainer = document.querySelector('.notification-container');
+    if (notifications.length >= MAX_NOTIFICATION_COUNT)
+        return;
+    var newElement = document.createElement('div');
+    newElement.classList.add('notification');
+    newElement.innerHTML = "<p>Image resized ".concat(SUCCESS_EMOJI, "</p>");
+    notificationContainer.appendChild(newElement);
+    // Remove the notification after 3 seconds.
+    setTimeout(function () { return notificationContainer.removeChild(newElement); }, NOTIFICATION_TIMEOUT);
 };
 /**
  * When the browser has loaded, add event listeners
@@ -128,25 +149,7 @@ var downloadImage = function (downloadUrl, fileName) {
 window.addEventListener('load', function () {
     var dropBox = document.querySelector('.drop_zone');
     var emoji = document.querySelector('#emoji');
-    var notification = document.querySelector('.notification');
     dropBox.addEventListener('dragover', function () { return emoji.innerHTML = SUCCESS_EMOJI; });
     dropBox.addEventListener('dragleave', function () { return emoji.innerHTML = DROP_IMAGE_EMOJI; });
     dropBox.addEventListener('drop', function () { return emoji.innerHTML = DROP_IMAGE_EMOJI; });
-    notification === null || notification === void 0 ? void 0 : notification.addEventListener('mouseover', function (e) {
-        var element = e.target ? e.target : e.srcElement;
-        // @ts-ignore;
-        element.remove();
-    });
-    dropBox.addEventListener('mouseover', function () {
-        var newElement = document.createElement('div');
-        newElement.classList.add('notification');
-        newElement.innerHTML = "\n            <p>Your photo has been resized.</p>\n        ";
-        // Temporal testing code.
-        newElement.addEventListener('mouseover', function (e) {
-            var element = e.target ? e.target : e.srcElement;
-            // @ts-ignore;
-            element.remove();
-        });
-        document.body.appendChild(newElement);
-    });
 });
