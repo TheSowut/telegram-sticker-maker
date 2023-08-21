@@ -2,6 +2,7 @@ const DROP_IMAGE_EMOJI = '⬇️';
 const SUCCESS_EMOJI = '✔️';
 const MAX_NOTIFICATION_COUNT = 5;
 const NOTIFICATION_TIMEOUT = 3000;
+const NOTIFICATION_GAP_PX = 40;
 let notificationTopPosition: number = 0;
 
 /**
@@ -155,15 +156,15 @@ window.addEventListener('load', () => {
         let newElement = document.createElement('div');
         newElement.classList.add('notification');
         newElement.style.top = `${notificationTopPosition}px`;
-        notificationTopPosition += 40;
+        notificationTopPosition += NOTIFICATION_GAP_PX;
         newElement.innerHTML = `
-            <p>Your photo has been resized.</p>
+                <p>Photo resized ${SUCCESS_EMOJI}</p>
         `;
         document.body.appendChild(newElement);
 
         // Remove the notification after 3 seconds.
         setTimeout(() => {
-            notificationTopPosition -= 40;
+            notificationTopPosition -= NOTIFICATION_GAP_PX;
             document.body.removeChild(newElement);
         }, NOTIFICATION_TIMEOUT)
     });
