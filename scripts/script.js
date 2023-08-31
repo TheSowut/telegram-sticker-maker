@@ -11,6 +11,11 @@ var DROP_IMAGE_EMOJI = '⬇️';
 var SUCCESS_EMOJI = '✔️';
 var MAX_NOTIFICATION_COUNT = 5;
 var NOTIFICATION_TIMEOUT = 3000;
+var NOTIFICATIONT_TYPE;
+(function (NOTIFICATIONT_TYPE) {
+    NOTIFICATIONT_TYPE["SUCCESS"] = "success";
+    NOTIFICATIONT_TYPE["FAILURE"] = "failure";
+})(NOTIFICATIONT_TYPE || (NOTIFICATIONT_TYPE = {}));
 /**
  * Handles the input event
  * @param event
@@ -38,8 +43,11 @@ var dropHandler = function (event) {
  * @returns
  */
 var prepareReader = function (file) {
-    if (!isFileImage(file))
+    if (!isFileImage(file)) {
+        displayImageResizedNotification(NOTIFICATIONT_TYPE.FAILURE);
         return;
+    }
+    ;
     var reader = new FileReader();
     var img = new Image();
     reader.onload = function (readerEvent) {
@@ -122,7 +130,7 @@ var downloadImage = function (downloadUrl, fileName) {
     anchor.download = fileName;
     document.body.appendChild(anchor);
     anchor.click();
-    displayImageResizedNotification();
+    displayImageResizedNotification(NOTIFICATIONT_TYPE.SUCCESS);
 };
 /**
  * Display a notification when the image has been successfuly resized & downloaded.
@@ -130,14 +138,18 @@ var downloadImage = function (downloadUrl, fileName) {
  *
  * @returns
  */
-var displayImageResizedNotification = function () {
+var displayImageResizedNotification = function (notificationType) {
     var notifications = document.querySelectorAll('.notification');
     var notificationContainer = document.querySelector('.notification-container');
+    var isNotificationTypeSuccess = notificationType === NOTIFICATIONT_TYPE.SUCCESS;
     if (notifications.length >= MAX_NOTIFICATION_COUNT)
         return;
     var newElement = document.createElement('div');
     newElement.classList.add('notification');
-    newElement.innerHTML = "<p>Image resized ".concat(SUCCESS_EMOJI, "</p>");
+    var type = isNotificationTypeSuccess ? 'notification--success' : 'notification--failure';
+    var notificationText = isNotificationTypeSuccess ? '<p>Image resized ${SUCCESS_EMOJI}</p>' : 'whatever';
+    newElement.classList.add(type);
+    newElement.innerHTML = notificationText;
     notificationContainer.appendChild(newElement);
     // Remove the notification after 3 seconds.
     setTimeout(function () { return notificationContainer.removeChild(newElement); }, NOTIFICATION_TIMEOUT);

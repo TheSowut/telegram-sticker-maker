@@ -61,7 +61,6 @@ main {
 }
 
 .notification {
-    background: green;
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -70,6 +69,14 @@ main {
     color: #fff;
 
     padding: 0.25em;
+}
+
+.notification--success {
+    background: green;
+}
+
+.notification--failure {
+    background: red;
 }
 
 @media only screen and (max-width: 800px) {

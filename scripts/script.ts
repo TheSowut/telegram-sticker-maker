@@ -3,6 +3,11 @@ const SUCCESS_EMOJI = '✔️';
 const MAX_NOTIFICATION_COUNT = 5;
 const NOTIFICATION_TIMEOUT = 3000;
 
+enum NOTIFICATIONT_TYPE {
+    SUCCESS = "success",
+    FAILURE = "failure"
+}
+
 /**
  * Handles the input event
  * @param event
@@ -33,7 +38,10 @@ const dropHandler = (event: any) => {
  * @returns
  */
 const prepareReader = (file: File) => {
-    if (!isFileImage(file)) return;
+    if (!isFileImage(file)) {
+        displayImageResizedNotification(NOTIFICATIONT_TYPE.FAILURE);
+        return
+    };
 
     const reader = new FileReader();
     const img = new Image();
@@ -127,7 +135,7 @@ const downloadImage = (downloadUrl: string, fileName: string) => {
     anchor.download = fileName;
     document.body.appendChild(anchor);
     anchor.click();
-    displayImageResizedNotification();
+    displayImageResizedNotification(NOTIFICATIONT_TYPE.SUCCESS);
 }
 
 /**
@@ -136,15 +144,20 @@ const downloadImage = (downloadUrl: string, fileName: string) => {
  *
  * @returns
  */
-const displayImageResizedNotification = () => {
+const displayImageResizedNotification = (notificationType: NOTIFICATIONT_TYPE) => {
     const notifications = document.querySelectorAll('.notification');
     const notificationContainer: Element = document.querySelector('.notification-container')!;
+    const isNotificationTypeSuccess = notificationType === NOTIFICATIONT_TYPE.SUCCESS;
 
     if (notifications.length >= MAX_NOTIFICATION_COUNT) return;
 
     let newElement = document.createElement('div');
     newElement.classList.add('notification');
-    newElement.innerHTML = `<p>Image resized ${SUCCESS_EMOJI}</p>`;
+    let type = isNotificationTypeSuccess ? 'notification--success' : 'notification--failure';
+    let notificationText = isNotificationTypeSuccess ? '<p>Image resized ${SUCCESS_EMOJI}</p>' : 'FAILURE';
+
+    newElement.classList.add(type);
+    newElement.innerHTML = notificationText;
     notificationContainer.appendChild(newElement);
 
     // Remove the notification after 3 seconds.
