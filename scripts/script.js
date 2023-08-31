@@ -9,6 +9,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 var DROP_IMAGE_EMOJI = '⬇️';
 var SUCCESS_EMOJI = '✔️';
+var FAILURE_EMOJI = '✖️';
 var MAX_NOTIFICATION_COUNT = 5;
 var NOTIFICATION_TIMEOUT = 3000;
 var NOTIFICATIONT_TYPE;
@@ -147,7 +148,9 @@ var displayImageResizedNotification = function (notificationType) {
     var newElement = document.createElement('div');
     newElement.classList.add('notification');
     var type = isNotificationTypeSuccess ? 'notification--success' : 'notification--failure';
-    var notificationText = isNotificationTypeSuccess ? '<p>Image resized ${SUCCESS_EMOJI}</p>' : 'whatever';
+    var notificationText = isNotificationTypeSuccess ?
+        "<p>Image resized " + SUCCESS_EMOJI + "</p>" :
+        "<p>Failed to resize file " + FAILURE_EMOJI + "</p";
     newElement.classList.add(type);
     newElement.innerHTML = notificationText;
     notificationContainer.appendChild(newElement);

@@ -1,5 +1,6 @@
 const DROP_IMAGE_EMOJI = '⬇️';
 const SUCCESS_EMOJI = '✔️';
+const FAILURE_EMOJI = '✖️';
 const MAX_NOTIFICATION_COUNT = 5;
 const NOTIFICATION_TIMEOUT = 3000;
 
@@ -154,7 +155,9 @@ const displayImageResizedNotification = (notificationType: NOTIFICATIONT_TYPE) =
     let newElement = document.createElement('div');
     newElement.classList.add('notification');
     let type = isNotificationTypeSuccess ? 'notification--success' : 'notification--failure';
-    let notificationText = isNotificationTypeSuccess ? '<p>Image resized ${SUCCESS_EMOJI}</p>' : 'FAILURE';
+    let notificationText = isNotificationTypeSuccess ?
+        `<p>Image resized ${SUCCESS_EMOJI}</p>` :
+        `<p>Failed to resize file ${FAILURE_EMOJI}</p`;
 
     newElement.classList.add(type);
     newElement.innerHTML = notificationText;
