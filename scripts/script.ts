@@ -1,12 +1,5 @@
-const DROP_IMAGE_EMOJI = '⬇️';
-const SUCCESS_EMOJI = '✔️';
-const MAX_NOTIFICATION_COUNT = 5;
-const NOTIFICATION_TIMEOUT = 3000;
-
-enum NOTIFICATIONT_TYPE {
-    SUCCESS = "success",
-    FAILURE = "failure"
-}
+import { DROP_IMAGE_EMOJI, FAILURE_EMOJI, MAX_NOTIFICATION_COUNT, NOTIFICATION_TIMEOUT, SUCCESS_EMOJI } from "./constants";
+import { NOTIFICATIONT_TYPE } from "./enums";
 
 /**
  * Handles the input event
@@ -154,7 +147,9 @@ const displayImageResizedNotification = (notificationType: NOTIFICATIONT_TYPE) =
     let newElement = document.createElement('div');
     newElement.classList.add('notification');
     let type = isNotificationTypeSuccess ? 'notification--success' : 'notification--failure';
-    let notificationText = isNotificationTypeSuccess ? '<p>Image resized ${SUCCESS_EMOJI}</p>' : 'FAILURE';
+    let notificationText = isNotificationTypeSuccess ?
+        `<p>Image resized ${SUCCESS_EMOJI}</p>` :
+        `<p>Image failed to resize ${FAILURE_EMOJI}</p`;
 
     newElement.classList.add(type);
     newElement.innerHTML = notificationText;
