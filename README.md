@@ -9,4 +9,4 @@
 
 ## To be added:
 1. ~~Responsive design~~
-2. Notification on image download
+2. ~Notification on image download~
